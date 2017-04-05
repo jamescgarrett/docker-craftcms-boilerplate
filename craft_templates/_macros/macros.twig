@@ -1,0 +1,112 @@
+{# 
+	Highlight Menu
+	Adds active class to menu based on slug and class
+#}
+{% macro is_active(segment, segmentNum, activeClass) %}{% if craft.request.getSegment(segmentNum) == segment %} {{activeClass}}{% endif %}{% endmacro %}
+
+{# 
+	Lowercase string and replace spaces with -
+#}
+{% macro lowercase_replace_space(string) %}{{string|lower|replace(" ", "-")}}{% endmacro %}
+
+{# Pull Excerpt fropm Body #}
+{% macro post_excerpt(body) %}
+	{% set paragraphs = body | split("</p>") %}
+	{% set firstParagraph = paragraphs | first ~ "</p>" %}
+	{% set stripped = firstParagraph |striptags %}
+	{% set excerpt = stripped |length > 275 ? stripped|slice(0, 275) ~ "..." : stripped %}
+	{{ excerpt }}
+{% endmacro %}
+
+{# 
+	Class Helper
+	Adds Class to Element 
+
+	credit: marion.newlevant@gmail.com - https://straightupcraft.com/articles/responsive-images-with-twig-macros
+#}
+{% macro _class_attr(classes) %}
+	{%- if (classes|length) -%}
+		class="{{ classes|join(" ") }}"
+	{%- endif -%}
+{% endmacro %}
+
+{# 
+	Responsive Image
+	Uses srcset to set responsive images
+	@ asset - image  object
+	@ options - { alt, class, style }
+
+	credit: marion.newlevant@gmail.com - https://straightupcraft.com/articles/responsive-images-with-twig-macros
+#}
+{% macro responsive_image(asset, options={}) %}
+	{% import _self as self %}
+	{% set options = {
+		alt: asset.title,
+		class: [],
+		style: "default",
+		transformMode: ""
+	} |merge(options) %}
+	{% set transform = {
+		mode: options.transformMode
+	} %}
+	{% set nativeWidth = asset.getWidth(false) %}
+	{% set config = {
+		default: {
+			srcsetWidths: [420, 640, 960, 1260],
+			sizes: [
+				"100vw"
+			],
+			defaultWidth: 1200
+		},
+		thumb: {
+			srcsetWidths: [420, 640],
+			sizes: [
+				"100vw"
+			],
+			defaultWidth: 640
+		}
+	} %}
+	{% set params = config[options.style] %}
+	{% set srcset = [asset.getUrl(false) ~ " " ~nativeWidth ~ "w"] %}
+	{% for width in params['srcsetWidths'] %}
+		{% if width < nativeWidth %}
+			{% set srcset = srcset|merge([asset.getUrl(transform|merge({width: width})) ~ " " ~ width ~ "w"]) %}
+		{% endif %}
+	{% endfor %}
+	<img
+		{% if nativeWidth <= params["defaultWidth"] %}
+			src="{{ asset.getUrl(false) }}"
+		{% else %}
+			src="{{ asset.getUrl(transform|merge({width: params["defaultWidth"]})) }}"
+		{% endif %}
+
+		srcset="{{ srcset|join(', ') }}"
+		sizes="{{ params['sizes']|join(', ') }}"
+
+		alt="{{ options.alt }}"
+
+		{{ self._class_attr(options.class) }}
+	/>
+{% endmacro %}
+
+{# 
+	Form Errors
+#}
+{% macro errorList(errors) %}
+	{% if errors %}
+	    <ul class="form-errors">
+	        {% for error in errors %}
+	            <li class="form-errors-item"><i class="fa fa-exclamation-circle"></i> {{ error }}</li>
+	        {% endfor %}
+	    </ul>
+	{% endif %}
+{% endmacro %}
+
+{# 
+	Single Form Error
+#}
+{% macro singleError(error) %}
+	{% if error %}
+		<span class="form-error">{{ error }}</span>
+	{% endif %}	
+{% endmacro %}

@@ -1,0 +1,32 @@
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+*.swp
+
+pids
+logs
+results
+tmp
+
+#Build
+dist/uploads
+
+# API keys and secrets
+.env
+.env.dev
+
+# Dependency directory
+node_modules
+bower_components
+
+# Editors
+*.sublime
+
+# OS metadata
+.DS_Store
+Thumbs.db
