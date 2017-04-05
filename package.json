@@ -10,7 +10,7 @@
   "author": "James C Garrett",
   "license": "MIT",
   "scripts": {
-    "setup": "bash setup.sh",
+    "setup": "bash setup.sh craft_setup",
     "start": "gulp watch",
     "build": "cross-env NODE_ENV=production gulp build"
   },

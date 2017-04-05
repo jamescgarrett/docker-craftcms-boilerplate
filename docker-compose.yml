@@ -1,0 +1,47 @@
+version: '2.1'
+
+services:
+  web:
+    image: nginx:latest
+    ports:
+      - 8080:80
+    volumes:
+      - "${PUBLIC_ROOT}:/var/www/html"
+      - "${CRAFT_ROOT}:/var/www/craft"
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - public-network
+
+  php:
+    image: jamescgarrett/craftcms-php:latest
+    volumes:
+      - "${PUBLIC_ROOT}:/var/www/html"
+      - "${CRAFT_ROOT}:/var/www/craft"
+    networks:
+      - public-network
+    environment:
+      DB_SERVER: mysql
+      DB_PORT: 3306
+      DB_NAME: "${DB_NAME}"
+      DB_USER: "${DB_USER}"
+      DB_PASS: "${DB_PASS}"
+      DB_PREFIX: "${DB_PREFIX}"
+
+  mysql:
+    image: mariadb:latest
+    volumes:
+      - data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "${DB_ROOT_PASS}"
+      MYSQL_DATABASE: "${DB_NAME}"
+      MYSQL_USER: "${DB_USER}"
+      MYSQL_PASSWORD: "${DB_PASS}"
+    networks:
+      - public-network
+
+volumes:
+  data:
+
+networks:
+  public-network:
+    driver: bridge
