@@ -18,7 +18,7 @@
 
   pack_uploads() {
     echo "Packing uploads to your dropbox folder"
-    tar -zcvf ~/Dropbox/`basename $PWD`/uploads.tar.gz ./public/uploads/ 
+    tar -zcvf ~/Dropbox/craftCMS_uploads/`basename $PWD`/uploads.tar.gz ./public/uploads/ 
     echo "Finished pacing uploads"
   }
 
