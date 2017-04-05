@@ -17,8 +17,8 @@
   }
 
   pack_uploads() {
-    echo "Packing uploads"
-    tar -zcvf ~/Desktop/uploads.tar.gz ./public/uploads/ 
+    echo "Packing uploads to your dropbox folder"
+    tar -zcvf ~/Dropbox/`basename $PWD`/uploads.tar.gz ./public/uploads/ 
     echo "Finished pacing uploads"
   }
 
