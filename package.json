@@ -11,6 +11,12 @@
   "license": "MIT",
   "scripts": {
     "setup": "bash setup.sh craft_setup",
+    "setup:clone": "bash setup.sh setup_clone",
+    "prepareclone": "bash setup.sh prepare_clone",
+    "db:dump": "bash setup.sh dump_database",
+    "db:import": "bash setup.sh import_database",
+    "uploads:pack": "bash setup.sh pack_uploads",
+    "uploads:unpack": "bash setup.sh unpack_uploads",
     "start": "gulp watch",
     "build": "cross-env NODE_ENV=production gulp build"
   },

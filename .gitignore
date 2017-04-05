@@ -14,11 +14,13 @@ results
 tmp
 
 #Build
-dist/uploads
+public/uploads
+craft/app
+craft/storage
+craft/plugins
 
 # API keys and secrets
-.env
-.env.dev
+.env.prod
 
 # Dependency directory
 node_modules
