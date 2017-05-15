@@ -143,6 +143,8 @@ return array(
   'enableCsrfProtection' => true,
   'omitScriptNameInUrls' => true,
   'devMode' => true,
+  'cache' => false,
+  'siteUrl' => 'http://localhost:8080/',
 );
 EOF
     echo "Finished Creating General Config"

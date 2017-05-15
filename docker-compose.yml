@@ -17,6 +17,7 @@ services:
     volumes:
       - "${PUBLIC_ROOT}:/var/www/html"
       - "${CRAFT_ROOT}:/var/www/craft"
+      - ./docker/php/php.ini:/usr/local/etc/php/php.ini
     networks:
       - public-network
     environment:

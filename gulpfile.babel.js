@@ -2,9 +2,9 @@ import gulp from 'gulp';
 import eslint from 'gulp-eslint';
 import uglify from 'gulp-uglify';
 import clean from 'gulp-clean';
-import plumber from 'gulp-plumber';
 import autoprefixer from 'gulp-autoprefixer';
 import sass from 'gulp-sass';
+import notify from 'gulp-notify';
 import babelify from 'babelify';
 import exorcist from 'exorcist';
 import browserify from 'browserify';
@@ -21,12 +21,12 @@ const config = {
     all: 'src/js/**/*.js',
     src: 'src/js/',
     map: 'public/src/js/scripts.js.map',
-    output: 'site/html/src/js', 
+    output: 'public/src/js', 
   },
   css: {
     entry: 'src/scss/style.scss',
     all: 'src/scss/**/*.scss',
-    output: 'site/html/src/css',
+    output: 'public/src/css',
   },
 }
 
@@ -37,7 +37,8 @@ const config = {
 gulp.task('lint', () => {
   gulp.src([config.js.all])
     .pipe(eslint())
-    .pipe(eslint.format());
+    .pipe(eslint.format())
+    .pipe(eslint.failAfterError());
 });
 
 /*
@@ -46,10 +47,11 @@ gulp.task('lint', () => {
  */
 gulp.task('browserify', () => {
   browserify(config.js.entry, {extensions: ['.js', '.json', '.jsx'], debug: true})
+    .on('error', notify.onError())
     .transform(babelify)
     .bundle()
     .pipe(exorcist(config.js.map))
-    .pipe(source('scritps.min.js'))
+    .pipe(source('scripts.min.js'))
     .pipe(buffer())
     .pipe(uglify())
     .pipe(gulp.dest(config.js.output));
@@ -69,7 +71,7 @@ gulp.task('watchify', () => {
   let bundler = watchify(browserify(options));
   function rebundle() {
     return bundler.bundle()
-      .pipe(plumber())
+      .on('error', notify.onError())
       .pipe(exorcist(config.js.map))
       .pipe(source('scripts.js'))
       .pipe(buffer())
@@ -99,7 +101,7 @@ gulp.task('browserSync', () => {
  */
 gulp.task('sass', () => {
   gulp.src([config.css.all])
-    .pipe(plumber())
+    .on('error', notify.onError())
     .pipe(sass())
     .pipe(gulp.dest(config.css.output))
     .pipe(reload({stream: true}));
@@ -111,7 +113,7 @@ gulp.task('sass', () => {
  */
 gulp.task('autoprefixer', () => {
   gulp.src(`${config.css.output}/style.css`)
-    .pipe(plumber())
+    .on('error', notify.onError())
     .pipe(autoprefixer({
         browsers: ['last 2 versions'],
         cascade: false

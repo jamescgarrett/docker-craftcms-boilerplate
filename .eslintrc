@@ -3,7 +3,14 @@
   "parser": "babel-eslint",
   "rules": {
       "quotes": [2, "single"],
+      "jsx-quotes": [2, "prefer-single"],
       "strict": 0,
+      "react/jsx-uses-react": 2,
+      "react/jsx-uses-vars": 2,
+      "react/react-in-jsx-scope": 2,
+      "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+      "react/forbid-prop-types": 0,
+      "react/require-default-props": 0,
       "no-underscore-dangle": 0,
       "no-unneeded-ternary": 0
   },
@@ -13,6 +20,12 @@
   },
   "parserOptions": {
     "ecmaVersion": 6,
-    "sourceType": "module"
-  }
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": [
+    "react"
+  ]
 }
